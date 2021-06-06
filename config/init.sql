@@ -167,3 +167,21 @@ CREATE TRIGGER post_update
     ON post
     FOR EACH ROW
     EXECUTE PROCEDURE post_update();
+
+--indexes
+CREATE INDEX if not exists forum_users_nickname ON forum_users (nickname);
+CREATE INDEX if not exists forum_users_slug ON forum_users (slug);
+
+CREATE INDEX if not exists thr_date ON thread (created);
+CREATE INDEX if not exists thr_forum ON thread using hash (forum);
+CREATE INDEX if not exists thr_forum_date ON thread (forum, created);
+CREATE INDEX if not exists thr_forum_id ON thread (id, forum);
+
+create index if not exists post_id_path on post (id, (route[1]));
+create index if not exists post_thread_id_path1_parent on post (thread, id, (route[1]), parent);
+create index if not exists post_thread_path_id on post (thread, route, id);
+create index if not exists post_path1 on post ((route[1]));
+
+CREATE INDEX if not exists post_thr_id ON post (thread);
+CREATE INDEX if not exists post_forum_id ON post (forum);
+CREATE INDEX if not exists post_author_id ON post (author);
